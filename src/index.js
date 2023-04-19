@@ -1,73 +1,10 @@
 const express = require("express");
+const { idAutomaticoClientes, idAutomaticoProdutos } = require("./util.js");
+let { clientes } = require("./clientes.js");
+let { produtos } = require("./produtos.js");
+
 const app = express();
 app.use(express.json());
-
-let idC = 1;
-let idP = 1;
-
-const idAutomaticoClientes = () => idC++;
-const idAutomaticoProdutos = () => idP++;
-
-let clientes = [
-  {
-    id: idAutomaticoClientes(),
-    nome: "Ana",
-    idade: 45,
-    telefone: "(22) 9999-9999",
-  },
-  {
-    id: idAutomaticoClientes(),
-    nome: "Danilo",
-    idade: 32,
-    telefone: "(22) 9999-9999",
-  },
-  {
-    id: idAutomaticoClientes(),
-    nome: "Juliana",
-    idade: 65,
-    telefone: "(22) 9999-9999",
-  },
-  {
-    id: idAutomaticoClientes(),
-    nome: "Nubia",
-    idade: 32,
-    telefone: "(22) 9999-9999",
-  },
-  {
-    id: idAutomaticoClientes(),
-    nome: "Elizangela",
-    idade: 20,
-    telefone: "(22) 9999-9999",
-  },
-];
-
-let produtos = [
-  {
-    id: idAutomaticoProdutos(),
-    descricao: "Coca-cola",
-    preco: 12,
-  },
-  {
-    id: idAutomaticoProdutos(),
-    descricao: "Picanha, FAZ A DESGRAÇA DO L",
-    preco: 68.9,
-  },
-  {
-    id: idAutomaticoProdutos(),
-    descricao: "Fanta",
-    preco: 5,
-  },
-  {
-    id: idAutomaticoProdutos(),
-    descricao: "Miojo",
-    preco: 1.29,
-  },
-  {
-    id: idAutomaticoProdutos(),
-    descricao: "arroz",
-    preco: 25,
-  },
-];
 
 app.get("/produtos", (req, res) => {
   res.send(produtos);
