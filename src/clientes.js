@@ -1,6 +1,6 @@
-const { idAutomaticoClientes } = require("./util.js");
+import { idAutomaticoClientes } from "./util.js";
 
-let clientes = [
+export const clientes = [
   {
     id: idAutomaticoClientes(),
     nome: "Ana",
@@ -32,5 +32,3 @@ let clientes = [
     telefone: "(22) 9999-9999",
   },
 ];
-
-exports.clientes = clientes;

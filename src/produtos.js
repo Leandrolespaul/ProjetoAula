@@ -1,6 +1,6 @@
-const { idAutomaticoProdutos } = require("./util.js");
+import { idAutomaticoProdutos } from "./util.js";
 
-let produtos = [
+export const produtosCadastrados = [
   {
     id: idAutomaticoProdutos(),
     descricao: "Coca-cola",
@@ -27,5 +27,3 @@ let produtos = [
     preco: 25,
   },
 ];
-
-exports.produtos = produtos;

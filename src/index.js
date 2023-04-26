@@ -1,7 +1,11 @@
-const express = require("express");
-const { idAutomaticoClientes, idAutomaticoProdutos } = require("./util.js");
-let { clientes } = require("./clientes.js");
-let { produtos } = require("./produtos.js");
+import express from "express";
+import { idAutomaticoClientes, idAutomaticoProdutos } from "./util.js";
+import { clientes as clientesCadastrados } from "./clientes.js"; // IMPORTE clientes COMO clientesCadastrados DO ARQUIVO "./clientes.js"
+import { produtosCadastrados } from "./produtos.js";
+
+
+let clientes = clientesCadastrados;
+let produtos = produtosCadastrados;
 
 const app = express();
 app.use(express.json());
