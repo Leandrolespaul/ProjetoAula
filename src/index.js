@@ -2,7 +2,7 @@ import express from "express";
 import { idAutomaticoClientes, idAutomaticoProdutos } from "./util.js";
 import { clientes as clientesCadastrados } from "./clientes.js"; // IMPORTE clientes COMO clientesCadastrados DO ARQUIVO "./clientes.js"
 import { produtosCadastrados } from "./produtos.js";
-
+import db from "./config/db/index.js";
 
 let clientes = clientesCadastrados;
 let produtos = produtosCadastrados;
