@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import sequelize from "./config/db/index.js";
+import sequelize from "../config/db/index.js";
 
 class Cliente extends Model {}
 
@@ -20,10 +20,13 @@ Cliente.init(
       allowNull: false,
     },
     createdAt: DataTypes.DATE,
-    upadatedAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
   },
   {
     modelName: "Cliente",
+    tableName: "cliente",
     sequelize,
   }
 );
+
+export default Cliente

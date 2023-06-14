@@ -1,4 +1,4 @@
-import { idAutomaticoProdutos } from "./util.js";
+import { idAutomaticoProdutos } from "../util.js";
 
 export const produtosCadastrados = [
   {
@@ -25,5 +25,4 @@ export const produtosCadastrados = [
     id: idAutomaticoProdutos(),
     descricao: "arroz",
     preco: 25,
-  },
-];
+  },];

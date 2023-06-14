@@ -1,127 +1,122 @@
 import express from "express";
-import { idAutomaticoClientes, idAutomaticoProdutos } from "./util.js";
-import { clientes as clientesCadastrados } from "./clientes.js"; // IMPORTE clientes COMO clientesCadastrados DO ARQUIVO "./clientes.js"
-import { produtosCadastrados } from "./produtos.js";
-import db from "./config/db/index.js";
+import Cliente from "./model/Cliente.js"
+import Produto from "./model/produto.js";
+import {differenceInYears} from 'date-fns'
 
-let clientes = clientesCadastrados;
-let produtos = produtosCadastrados;
 
 const app = express();
 app.use(express.json());
 
-app.get("/produtos", (req, res) => {
-  res.send(produtos);
+app.get("/produtos", async (req, res) => {
+    res.send(await Produto.findAll());
 });
 
-app.get("/produtos/:id", (req, res) => {
-  const buscar = produtos.find(
-    (produto) => String(produto.id) === req.params.id
-  );
-  res.send(buscar);
-});
-app.post("/produtos", (req, res) => {
-  // validação
-  if (!req.body.descricao) {
-    res.status(400);
-    res.send("Descrição é obrigatória.");
-  }
-  if (!req.body.preco) {
-    res.status(400);
-    res.send("Preço é obrigatório.");
-  }
-
-  produtos.push({
-    id: idAutomaticoProdutos(),
-    descricao: req.body.descricao,
-    preco: req.body.preco,
-  });
-
-  res.send("Adicionado");
+app.get("/produtos/:id", async (req, res) => {
+    res.send(await Produto.findByPk(req.params.id))
 });
 
-app.put("/produtos/:id", (req, res) => {
-  let encontrado = produtos.find(
-    (produto) => produto.id === parseInt(req.params.id)
-  );
+app.post("/produtos", async (req, res) => {
+    // validação
+    if (!req.body.descricao) {
+        res.status(400);
+        res.send("Descrição é obrigatória.");
+    }
+    if (!req.body.preco) {
+        res.status(400);
+        res.send("Preço é obrigatório.");
+    }
 
-  if (req.body.descricao) {
-    encontrado.descricao = req.body.descricao;
-  }
-  if (req.body.preco) {
-    encontrado.preco = req.body.preco;
-  }
+    await Produto.create({
+        descricao: req.body.descricao,
+        preco: req.body.preco,
+    });
 
-  res.send(encontrado);
+    res.send("Adicionado");
 });
 
-app.delete("/produtos/:id", (req, res) => {
-  produtos = produtos.filter(
-    (produto) => produto.id !== parseInt(req.params.id)
-  );
-  console.log(req.params);
-  res.send("Deletado");
+app.put("/produtos/:id", async (req, res) => {
+
+    const encontrado = await Produto.update({
+        descricao: req.body.descricao,
+        preco: req.body.preco
+    },
+        {
+            were: {
+                id: req.params.id
+            }
+        })
+
+    res.send(encontrado);
 });
 
-app.get("/clientes", function (req, res) {
-  res.send(clientes);
+app.delete("/produtos/:id",  async (req, res) => {
+    await Produto.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
+    res.send("Deletado");
 });
 
-app.get("/clientes/:id", (req, res) => {
-  const procurar = clientes.find(
-    (cliente) => String(cliente.id) === req.params.id
-  );
-  res.send(procurar);
+app.get("/clientes", async function (req, res) {
+    const clientes = await Cliente.findAll({raw: true})
+    const mapeando =  clientes.map(cliente => {
+        cliente.idade = differenceInYears(new Date(), cliente.dataNascimento)
+        return cliente
+    })
+
+    res.send(mapeando);
 });
 
-app.post("/clientes", function (req, res) {
-  if (!req.body.nome) {
-    res.status(400);
-    res.send("Nome é obrigatório.");
-  }
-  if (!req.body.idade) {
-    res.status(400);
-    res.send("Idade é obrigatório.");
-  }
-  if (!req.body.telefone) {
-    res.status(400);
-    res.send("Telefone é obrigatório.");
-  }
-  clientes.push({
-    id: idAutomaticoClientes(),
-    nome: req.body.nome,
-    idade: req.body.idade,
-    telefone: req.body.telefone,
-  });
-  res.send("ok");
+app.get("/clientes/:id", async (req, res) => {
+    res.send(await Cliente.findByPk(req.params.id))
 });
 
-app.put("/clientes/:id", (req, res) => {
-  const encontrado = clientes.find(
-    (cliente) => cliente.id === parseInt(req.params.id)
-  );
+app.post("/clientes", async function (req, res) {
+    if (!req.body.nome) {
+        res.status(400);
+        res.send("Nome é obrigatório.");
+    }
+    if (!req.body.dataNascimento) {
+        res.status(400);
+        res.send("Data de nascimento é obrigatório.");
+    }
+    if (!req.body.telefone) {
+        res.status(400);
+        res.send("Telefone é obrigatório.");
+    }
 
-  if (req.body.nome) {
-    encontrado.nome = req.body.nome;
-  }
-  if (req.body.idade) {
-    encontrado.idade = req.body.idade;
-  }
-  if (req.body.telefone) {
-    encontrado.telefone = req.body.telefone;
-  }
+     await Cliente.create({
+        nome: req.body.nome,
+        dataNascimento: req.body.dataNascimento,
+        telefone: req.body.telefone
+    })
 
-  res.send(encontrado);
+    res.send("ok");
 });
 
-app.delete("/clientes/:id", (req, res) => {
-  clientes = clientes.filter(
-    (cliente) => cliente.id !== parseInt(req.params.id)
-  );
-  console.log(req.params);
-  res.send("Deletado");
+app.put("/clientes/:id", async(req, res) => {
+
+
+    const encontrado = await Cliente.update({ nome: req.body.nome, dataNascimento: req.body.dataNascimento, telefone: req.body.telefone }, {
+        where: {
+            id: req.params.id
+        }
+    });
+
+    res.send(encontrado);
+});
+
+app.delete("/clientes/:id", async (req, res) => {
+
+    await Cliente.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
+    res.send("Deletado");
 });
 
 app.listen(4000, () => {
-  console.log("Servidor Iniciado");
+    console.log("Servidor Iniciado");
 });

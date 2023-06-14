@@ -1,4 +1,4 @@
-import { idAutomaticoClientes } from "./util.js";
+import { idAutomaticoClientes } from "../util.js";
 
 export const clientes = [
   {
