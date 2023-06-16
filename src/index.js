@@ -117,6 +117,10 @@ app.delete("/clientes/:id", async (req, res) => {
     res.send("Deletado");
 });
 
+
+
 app.listen(4000, () => {
     console.log("Servidor Iniciado");
 });
+
+
